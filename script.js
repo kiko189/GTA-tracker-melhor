@@ -19,3 +19,41 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
+// Seleção de elementos
+const loginForm = document.getElementById('login-form');
+const logoutBtn = document.getElementById('logout-btn');
+
+// Evento de login
+loginForm.addEventListener('submit', (e) => {
+  e.preventDefault(); // Evita o envio do formulário
+
+  const email = document.getElementById('email').value;
+  const password = document.getElementById('password').value;
+
+  // Realiza o login
+  firebase.auth().signInWithEmailAndPassword(email, password)
+    .then((userCredential) => {
+      // Login bem-sucedido
+      const user = userCredential.user;
+      console.log("Usuário logado:", user);
+      // Mostrar botão de logout
+      logoutBtn.style.display = "block";
+    })
+    .catch((error) => {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      console.error("Erro de login:", errorCode, errorMessage);
+    });
+});
+
+// Evento de logout
+logoutBtn.addEventListener('click', () => {
+  firebase.auth().signOut()
+    .then(() => {
+      console.log("Usuário deslogado");
+      logoutBtn.style.display = "none";
+    })
+    .catch((error) => {
+      console.error("Erro ao deslogar:", error);
+    });
+});
